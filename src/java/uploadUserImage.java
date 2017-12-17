@@ -4,29 +4,31 @@
  * and open the template in the editor.
  */
 
-import com.google.gson.Gson;
-import database.User;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author gee
  */
-@WebServlet(urlPatterns = {"/getProfile"})
-public class getProfile extends HttpServlet {
+@WebServlet(urlPatterns = {"/uploadUserImage"})
+@MultipartConfig
+public class uploadUserImage extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,41 +40,23 @@ public class getProfile extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException {
+            throws ServletException, IOException, ClassNotFoundException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
-            String userID = request.getParameter("ID");
-            Integer usersID = Integer.parseInt(userID);
-            
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ia-db", "root", "root");
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE id = ?");
-            statement.setInt(1, usersID);
-            ResultSet result = statement.executeQuery();
+            
+            String ID = (String) request.getParameter("ID");
 
-            String name = "", username = "", password = "", email = "", address = "", phone = "";
-            
-            User user = new User();
-            
-            while (result.next()) {
-                name = result.getString("name");
-                username = result.getString("username");
-                password = result.getString("password");
-                email = result.getString("email");
-                address = result.getString("address");
-                phone = result.getString("phone");
-                user = new User(usersID, name, email, username, password, address, phone);
-            }
+            Part part = request.getPart("image");
+            InputStream image = part.getInputStream();
+            PreparedStatement ps = connection.prepareStatement("UPDATE user SET picture = ? WHERE id = ?");
+            ps.setBlob(1, image);
+            ps.setInt(2, Integer.parseInt(ID));
+            ps.execute();
 
-            Gson gson = new Gson();
-            String json = gson.toJson(user);
-            System.out.println(json);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(json);
-            
-            connection.close();
+            response.sendRedirect("viewProfile.jsp");
+
         }
     }
 
@@ -91,9 +75,9 @@ public class getProfile extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(getProfile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(uploadUserImage.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(getProfile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(uploadUserImage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -111,9 +95,9 @@ public class getProfile extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(getProfile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(uploadUserImage.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(getProfile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(uploadUserImage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

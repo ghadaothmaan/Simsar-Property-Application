@@ -50,12 +50,17 @@
 
             <div class="container">
                   <h1>Hello, <%=user.name%>!</h1>
-                  <img src="<%=user.picture%>" height="150" width="150"/>
 
                   <div class="row">
                         <div class="col">
+                              <form action="uploadUserImage" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                    <img src="getUserPhoto?ID=<%=user.id%>"  height=150 width=150 class='img-circle'><br><br>
+                                    <input type="file" name="image" class="form-control"/> <br>
+                                    <input type="submit" value="Upload" class="btn btn-dark"/>  
+                                    <input type="hidden" name ="ID" value="<%=user.id%>">
+                              </form>
+
                               <form action = "updateProfile" method = "POST" class="form-horizontal"> <br><br>
-                                    <input type="file" value ="upload" name = "picture" class="form-control"> <br>
                                     Name: <input type="text" name="name" value="<%=user.name%>" class="form-control"><br>
                                     Email: <input type="email" name="email" value="<%=user.email%>" class="form-control" readonly><br>
                                     Old Password: <input type="password" name="oldpassword" class="form-control"><br>

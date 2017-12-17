@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-import com.google.gson.Gson;
-import database.User;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author gee
  */
-@WebServlet(urlPatterns = {"/getProfile"})
-public class getProfile extends HttpServlet {
+@WebServlet(urlPatterns = {"/getUserPhoto"})
+public class getUserPhoto extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,41 +38,10 @@ public class getProfile extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             
-            String userID = request.getParameter("ID");
-            Integer usersID = Integer.parseInt(userID);
-            
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ia-db", "root", "root");
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE id = ?");
-            statement.setInt(1, usersID);
-            ResultSet result = statement.executeQuery();
-
-            String name = "", username = "", password = "", email = "", address = "", phone = "";
-            
-            User user = new User();
-            
-            while (result.next()) {
-                name = result.getString("name");
-                username = result.getString("username");
-                password = result.getString("password");
-                email = result.getString("email");
-                address = result.getString("address");
-                phone = result.getString("phone");
-                user = new User(usersID, name, email, username, password, address, phone);
-            }
-
-            Gson gson = new Gson();
-            String json = gson.toJson(user);
-            System.out.println(json);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(json);
-            
-            connection.close();
         }
     }
 
@@ -89,12 +58,36 @@ public class getProfile extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            processRequest(request, response);
+            Class.forName("com.mysql.jdbc.Driver");
+             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ia-db", "root", "root");
+            String ID = request.getParameter("ID");
+           
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE id = ?");
+            statement.setInt(1, Integer.parseInt(ID));
+            
+            ResultSet result = statement.executeQuery();
+            statement.execute();
+                      
+            byte[] imgData = null;
+            while(result.next()){
+                Blob blob = result.getBlob("picture");
+                byte byteArray[] = blob.getBytes(1, (int)blob.length());
+
+                response.setContentType("image/png");
+                OutputStream os = response.getOutputStream();
+                os.write(byteArray);
+                os.flush();
+                os.close();
+            }
+            
+            connection.close();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(getProfile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getUserPhoto.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(getProfile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getUserPhoto.class.getName()).log(Level.SEVERE, null, ex);
         }
+            
+           
     }
 
     /**
@@ -108,13 +101,7 @@ public class getProfile extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(getProfile.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(getProfile.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

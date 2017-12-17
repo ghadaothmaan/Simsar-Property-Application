@@ -34,7 +34,7 @@
               $.post("getProfile", param, function (data) {
                   console.log(data);
                   $("#theProfile").text("Hello, " + data["name"]);
-//                  $("#headTitle").prepend("<h1>" "<img src="+data["picture"]+" height="150" width="150" class="img-circle"/>" + "</h1>");
+                  $("#headTitle").prepend("<img src='getUserPhoto?"+param+"' height='150' width='150' class='img-circle'/><br>");
                   $("#profile").append("<tr><th>Username: </th><td>" + data["username"] + "</td></tr>");
                   $("#profile").append("<tr><th>Email: </th><td>" + data["email"] + "</td></tr>");
                   $("#profile").append("<tr><th>Address: </th><td>" + data["address"] + "</td></tr>");

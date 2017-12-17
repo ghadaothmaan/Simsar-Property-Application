@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-import database.User;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -12,22 +12,21 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Abeer Ahmed
+ * @author Salma-Hassan
  */
-@WebServlet(urlPatterns = {"/signIn"})
-public class signIn extends HttpServlet {
+@WebServlet(urlPatterns = {"/getAllPhotos"})
+public class getAllPhotos extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,61 +40,31 @@ public class signIn extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+        try (PrintWriter out = response.getWriter()) {
+            
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ia-db", "root", "root");
+            PreparedStatement statement = connection.prepareStatement("SELECT adsPhotoID FROM adsphotos WHERE adsID = ?");
+            String adID = request.getParameter("ID");
+            
+            statement.setInt(1, Integer.parseInt(adID));
+            ResultSet result = statement.executeQuery();
+            ArrayList<Integer> photosID = new ArrayList<>();
+            
+            while(result.next()) 
+                photosID.add(result.getInt("adsPhotoID"));
+            
+            Gson gson = new Gson();
+            String json = gson.toJson(photosID);
 
-        String email, address, phone, name;
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(json);
 
-        User user = new User();
-
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ia-db", "root", "root");
-
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE username = ? and password = ?");
-        statement.setString(1, username);
-        statement.setString(2, password);
-
-        ResultSet result = statement.executeQuery();
-        Boolean valid = false;
-
-        int count = 0;
-        int userID = -1, admin = -1;
-
-        while (result.next()) {
-            count++;
-            userID = result.getInt("id");
-            email = result.getString("email");
-            name = result.getString("name");
-            phone = result.getString("phone");
-            address = result.getString("address");
-
-            admin = result.getInt("admin");
-            user = new User(userID, name, email, username, password, address, phone);
+            connection.close();
         }
-
-        if (count != 0) {
-            valid = true;
-        }
-
-        connection.close();
-        // send to home.jsp
-        if (valid) {
-            // storing user id in application scope to be known in all pages (or it should be session?)
-            HttpSession session = request.getSession();
-            session.setAttribute("userID", userID);
-            session.setAttribute("user", user);
-
-            session.setAttribute("admin", admin);
-            response.sendRedirect("home.jsp");
-
-        } else {
-            String message = "Invalid username or password.";
-            request.setAttribute("message", message);
-            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-            rd.forward(request, response);
-        }
+        
+            
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -113,9 +82,9 @@ public class signIn extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(signIn.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getAllPhotos.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(signIn.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getAllPhotos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -133,9 +102,9 @@ public class signIn extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(signIn.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getAllPhotos.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(signIn.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getAllPhotos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

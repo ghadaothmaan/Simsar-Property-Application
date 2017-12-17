@@ -18,19 +18,17 @@ public class User {
     public String password;
     public String address;
     public String phone;
-    public String picture;
     
     public User() {
         
     }
-    public User(Integer id, String name, String email, String username, String password, String address, String phone, String picture) {
+    public User(Integer id, String name, String email, String username, String password, String address, String phone) {
         this.id = id;
         this.username = username;
         this.name = name;
         this.password = password;
         this.address = address;
         this.phone = phone;
-        this.picture = picture;
         this.email = email;
     }
     public User(String name, String email, String phone) {

@@ -43,7 +43,7 @@ public class signUp extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        String username, email, password, address, phone, name, picture;
+        String username, email, password, address, phone, name;
         
         User user = new User();
         
@@ -64,11 +64,10 @@ public class signUp extends HttpServlet {
             email = result.getString("email");
             password = result.getString("password");
             name = result.getString("name");
-            picture = result.getString("picture");
             phone = result.getString("phone");
             address = result.getString("address");
             
-            user = new User(userID, name, email, username, password, address, phone, picture);
+            user = new User(userID, name, email, username, password, address, phone);
             
         }
         connection.close();
