@@ -1,0 +1,103 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 17, 2017, 6:23:36 PM
+    Author     : gee
+*/
+
+#nav{list-style:none;margin: 0px;padding: 0px;}
+#nav li {
+    float: left;
+    margin-right: 20px;
+    margin-left: -50px;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight:bold;
+}
+#nav li a{color:#919aa1;text-decoration:none}
+#nav li a:hover{color:#919aa1;text-decoration:none}
+
+#notification_li
+{
+    position:relative
+}
+#notificationContainer 
+{
+    background-color: white;
+    border: 1px solid rgba(100, 100, 100, .4);
+    -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+    overflow: auto;
+    position: absolute;
+    top: 30px;
+    margin-left: -170px;
+    width: 400px;
+    z-index: 1000;
+    display: none; // Enable this after jquery implementation 
+}
+
+// Popup Arrow
+#notificationContainer:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    color: transparent;
+    border: 10px solid black;
+    border-color: transparent transparent white;
+    margin-top: -20px;
+    margin-left: 188px;
+}
+
+#notificationTitle
+{
+
+    font-weight: normal;
+    padding: 8px;
+    font-size: 13px;
+    background-color:#ffffff;
+    position: fixed;
+    z-index: 1;
+    width: 384px;
+    border-bottom: 1px solid #dddddd;
+
+}
+
+#notificationsBody
+{
+    padding: 33px 0px 0px 0px !important;
+    min-height:300px;
+    font-weight: normal;
+    font-size: 13px;
+    font-family: "Times New Roman";
+    font-variant: small-caps;
+    font-color:#6f42c1;  
+}
+
+#notificationFooter
+{
+    background-color: #e9eaed;
+    text-align: center;
+    font-weight: bold;
+    padding: 8px;
+    font-size: 12px;
+    border-top: 1px solid #dddddd;
+}
+
+#notification_count 
+{
+    padding: 3px 7px 3px 7px;
+    background: #cc0000;
+    color: #ffffff;
+    font-weight:s bold;
+    margin-left: 120px;
+    border-radius: 9px;
+    -moz-border-radius: 9px; 
+    -webkit-border-radius: 9px;
+    position: absolute;
+    margin-top: -33px;
+    font-size: 11px;
+}
