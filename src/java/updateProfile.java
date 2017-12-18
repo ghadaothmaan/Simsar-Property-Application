@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-import database.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -13,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,15 +45,30 @@ public class updateProfile extends HttpServlet {
             HttpSession session = request.getSession();
             Integer userID = (Integer) session.getAttribute("userID");
 
-            String name, email, password, newpassword, address, phone;
+            String name, email, password, newpassword, address, phone, oldpassword;
 
             name = request.getParameter("name");
             email = request.getParameter("email");
             password = request.getParameter("password");
-            System.out.println("passwoooord " + password);
+            newpassword = request.getParameter("newpassword");
+            oldpassword = request.getParameter("oldpassword");
+            System.out.println("oldpassword  " + oldpassword + "  newpassword  " + newpassword);
 
-            if (request.getParameter("newpassword") != null) {
-                password = request.getParameter("newpassword");
+            if (!newpassword.equals("")) {
+                System.out.println("elseeeeeeeeee");
+                if (oldpassword.equals("")) {
+                    request.setAttribute("status", "nopassword");
+                    RequestDispatcher rd = request.getRequestDispatcher("editProfile.jsp");
+                    rd.forward(request, response);
+                } else {
+                    if (!oldpassword.equals(password)) {
+                        request.setAttribute("status", "wrongpassword");
+                        RequestDispatcher rd = request.getRequestDispatcher("editProfile.jsp");
+                        rd.forward(request, response);
+                    } else {
+                        password = newpassword;
+                    }
+                }
             }
 
             address = request.getParameter("address");
@@ -68,7 +83,6 @@ public class updateProfile extends HttpServlet {
             statement.setString(4, address);
             statement.setString(5, phone);
             statement.setInt(6, userID);
-
             statement.execute();
             connection.close();
 

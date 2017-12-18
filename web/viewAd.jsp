@@ -40,10 +40,8 @@
       <body>        
             <script>
                         $(document).ready(function () {
-
                             var param = "ID=" +<%=adID%>;
                             var adID = <%=adID%>;
-
 
                             $.post("getAd", param, function (data) {
                                 console.log(data);
@@ -78,16 +76,15 @@
                                 });
                                 $.get("getAdComments", "ID=" + data["adsID"], function (data) {
                                     for (var i = 0; i < data.length; i++) {
-
                                         $("#comments").append("<tr><td>" + data[i]["key"] + "</td><td>" + data[i]["value"]["key"] + "</td></tr><tr><td>" + data[i]["value"]["value"] + "</td></tr>");
                                     }
                                 });
                                 if (data["userID"] === <%=userID%>) {
                                     $("#headEdit").prepend("<a href='editUserAd.jsp?ID=<%=adID%>'><button class='btn btn-dark'>Edit Ad</button></a>");
+                                    $("#headEdit").prepend("<a href='closeAd?ID=" + adID + "'><button class='btn btn-danger'>Close Ad</button></a>");
                                 }
                                 initMap(data["mapLat"], data["mapLng"]);
                             });
-
                             $.get("getAllPhotos", param, function (data) {
                                 console.log(data);
                                 for (var i = 0; i < data.length; i++) {
@@ -102,42 +99,33 @@
                                 }
                                 $('#notification_count').text(data.length);
                             });
-
                             $("#notificationLink").click(function ()
                             {
                                 $("#notificationContainer").fadeToggle(300);
                                 $("#notification_count").fadeOut("slow");
                                 return false;
                             });
-
                             //document click hiding the popup 
                             $(document).click(function ()
                             {
                                 $("#notificationContainer").hide();
                             });
-
                             //popup on click
                             $("#notificationContainer").click(function ()
                             {
                                 return false;
                             });
-
                             $("#notificationsBody").click(function () {
                                 window.location = $(this).find("a").attr("href");
                                 return false;
                             });
-
                         });
-
-
-
             </script>
             <script>
                 function showDiv() {
                     if (document.getElementById('name').style.display !== "none" &&
                             document.getElementById('phone').style.display !== "none" &&
                             document.getElementById('email').style.display !== "none") {
-
                         document.getElementById('name').style.display = "none";
                         document.getElementById('phone').style.display = "none";
                         document.getElementById('email').style.display = "none";
@@ -147,7 +135,6 @@
                         document.getElementById('email').style.display = "block";
                     }
                 }
-
             </script>
             <script>
                 function initMap(lat, long) {
@@ -170,8 +157,6 @@
             <title>view Ad</title>
       </head>
 
-
-
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                   <a class="navbar-brand" href="home.jsp">Simsar</a>
@@ -186,6 +171,8 @@
                             if (admin == 1) {
                         %>
                         <li class="nav-item"><a href="manageAds.jsp" class="nav-link">Manage Ads</a><li>
+                        <li class="nav-item"><a href="manageUsers.jsp" class="nav-link">Manage Users</a><li>
+
                               <%
                                   }
                               %>
@@ -224,8 +211,6 @@
       </nav>
       <br><br>
 
-
-
       <div class="container">
             <div class="row" id="head">
                   <div class="col" id="headTitle">
@@ -236,7 +221,7 @@
                   </div>
             </div>
 
-            <!--slideshow for ad images-->
+            <!--slideshow for ad photos-->
             <div class="w3-content w3-display-container" style="max-width:800px" id = "slideshow">    
                   <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%" id = "innerslide">
                         <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
@@ -259,39 +244,35 @@
                   </div>
             </div>
 
-            <br><br>
+            <br>
 
-            <div id="name"  style="display:none;" class="answer_list" ></div>
+            <button type="button" name="answer" value="Contact Information" onclick="showDiv()" class="btn btn-outline-dark">Contact Info</button><br>
+            <br><div id="name"  style="display:none;" class="answer_list" ></div>
             <div id="phone"  style="display:none;" class="answer_list" ></div>
-            <div id="email"  style="display:none;" class="answer_list" ></div>
-            <button type="button" name="answer" value="Contact Information" onclick="showDiv()" class="btn btn-outline-dark">Contact Info</button>
-
+            <div id="email"  style="display:none;" class="answer_list" ></div><br>
 
             <form action="addRate" method="POST" class="form-horizontal">
-                  your rate: <br>
-                  <input type="number" min="0" max="5" name="rate" class="form-control"/>
+
+                  <input type="number" min="0" max="5" name="rate"placeholder="Rate this advertisement." class="form-control"/>
                   <input type ="hidden" name ="adID" value="<%=adID%>"> <br>
-                  <button type="submit" name="submit" class="btn btn-dark">rate</button>
+                  <button type="submit" name="submit" class="btn btn-dark">rate</button><br><br>
             </form>
 
-
-
+            <form action="addComment" method = "POST" class="form-horizontal">
+                  <input type ="text" name ="comment" placeholder="Please add a comment. Note, offensive comments will not be tolerated." class="form-control">
+                  <input type ="hidden" name ="adID" value="<%=adID%>"> <br>
+                  <input type="hidden" name ="userID" value="<%=userID%>">
+                  <button type="submit" name ="submit" value="add" class="btn btn-dark">comment </button><br><br>
+            </form>
             <table id="comments" class="table table-striped">
 
             </table>
-            <form action="addComment" method = "POST" class="form-horizontal">
-                  add a comment: <br>
-                  <input type ="text" name ="comment" placeholder="add comment" class="form-control">
-                  <input type ="hidden" name ="adID" value="<%=adID%>"> <br>
-                  <input type="hidden" name ="userID" value="<%=userID%>">
-                  <button type="submit" name ="submit" value="add" class="btn btn-dark">comment </button>
-            </form>
 
             <input type="hidden" id="map_lat" value="">
             <input type="hidden" id="map_lng" value="">
 
       </div>
-
+      <br><br><br>
 
 </body>
 

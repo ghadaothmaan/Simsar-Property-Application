@@ -72,7 +72,7 @@ public class addComment extends HttpServlet {
                     
             try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ia-db", "root", "root")) {
                 
-                // Insert comment
+                // insert comment
                 query = "INSERT INTO adscomments (commentAdID, comment, commentDate, commentUserID) VALUES(?,?,?,?)";
                 pstmt = connection.prepareStatement(query);
                 pstmt.setString(1, adID);
@@ -81,7 +81,7 @@ public class addComment extends HttpServlet {
                 pstmt.setString(4, userID);
                 pstmt.executeUpdate();
                 
-                // Get user ad id 
+                // get user ad id 
                 Integer adsID = Integer.parseInt(adID);
                 query = "SELECT * FROM advertisement WHERE adsID = ?";
                 pstmt = connection.prepareStatement(query);
@@ -93,7 +93,7 @@ public class addComment extends HttpServlet {
                     adTitle = result.getString("title");
                 }
                     
-                // Get name of current user
+                // get name of current user
                 Integer id = Integer.parseInt(userID);
                 query = "SELECT * FROM user WHERE id = ?";
                 pstmt = connection.prepareStatement(query);
@@ -103,7 +103,7 @@ public class addComment extends HttpServlet {
                 while (result.next())
                     userName = result.getString("name");
                 
-                //Get Email of ad user email
+                // get Email of ad user email
                 query = "SELECT * FROM user WHERE id = ?";
                 pstmt = connection.prepareStatement(query);
                 pstmt.setInt(1, userAdID);
@@ -111,7 +111,6 @@ public class addComment extends HttpServlet {
                 
                 while (result.next())
                     userAdEmail = result.getString("email");
-                
                 
                 // insert notification
                 notification = userName + " commented on your ad " + adTitle;
@@ -123,13 +122,10 @@ public class addComment extends HttpServlet {
                 pstmt.setString(4, "No");
                 pstmt.setInt(5, adsID);
                 pstmt.execute();
-               
             }
             
-            //Send notification to mail 
-            
+            // send notification to mail 
              try {
-                 
                 Properties props = new Properties();
                 props.put("mail.transport.protocol", "smtps");
                 props.put("mail.smtps.host", "smtp.gmail.com");
@@ -156,8 +152,6 @@ public class addComment extends HttpServlet {
             } catch (MessagingException e) {
                 log(e.toString());
             }
-            
-            ////////////////////////////////////////////////////////////////////////
             
             pstmt.close();
             response.sendRedirect("viewAd.jsp?ID=" + adID);

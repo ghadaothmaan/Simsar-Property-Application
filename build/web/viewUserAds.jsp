@@ -25,7 +25,7 @@
                     $.get("getUserAds", null, function (data) {
                         console.log(data); // all attributes of ad are available!
                         if (data.length == 0) {
-                            $("#myAds").append("<tr><td><strong>You have no ads yet!</strong></td></tr>")
+                            $("#myAds").append("<tr><td><strong>You have no ads yet!</strong></td></tr>");
                         }
                         for (var i = 0; i < data.length; i++) {
                             $("#myAds").append("<tr><td><a href='viewAd.jsp?ID=" + data[i]["adsID"] + "'>" + data[i]["title"] + " </a> </td><td>Rate: " + data[i]["rate"] + "</td></tr>");
@@ -77,6 +77,7 @@
                                   if (admin == 1) {
                               %>
                               <li class="nav-item"><a href="manageAds.jsp" class="nav-link">Manage Ads</a><li>
+                              <li class="nav-item"><a href="manageUsers.jsp" class="nav-link">Manage Users</a><li>
                                     <%
                                         }
                                     %>

@@ -39,17 +39,7 @@ public class UpdateUserAd extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UpdateUserAd</title>");
-            out.println("</head>");
-            out.println("<body>");
-            //out.println("<h1>Servlet UpdateUserAd at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-
+            
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ia-db", "root", "root");
 
@@ -73,9 +63,6 @@ public class UpdateUserAd extends HttpServlet {
             map_lng = request.getParameter("map_lng");
             country = request.getParameter("country");
 
-//            int priceInt = Integer.parseInt(price);
-//            double mapLat = Double.parseDouble(map_lat), mapLng = Double.parseDouble(map_lng);
-            
             int priceInt = 0;
             if (!price.equals(""))
                 priceInt = Integer.parseInt(price);

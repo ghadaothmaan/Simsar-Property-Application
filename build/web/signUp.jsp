@@ -47,7 +47,6 @@ and open the template in the editor.
                         } else {
                             $("#email-msg").text("");
                             $("#email-msg").removeClass("alert alert-danger");
-
                         }
                         if (data.validUsername && data.validEmail && password === password2) {
                             $("#submit-btn").removeAttr('disabled');

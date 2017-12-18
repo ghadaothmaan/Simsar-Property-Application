@@ -98,6 +98,7 @@
                                   if (admin == 1) {
                               %>
                               <li class="nav-item"><a href="manageAds.jsp" class="nav-link">Manage Ads</a><li>
+                              <li class="nav-item"><a href="manageUsers.jsp" class="nav-link">Manage Users</a><li>                                         
                                     <%
                                         }
                                     %>
@@ -184,13 +185,13 @@
                               <div class="col">
                                     <button type="submit" value="search" class="btn btn-dark">search</button>
                                     <br><br>
-                                    <button value="alert" id="alert-btn" class="btn btn-dark">alert!</button>
+                                    <button type="submit" formaction="addUserInterest" class="btn btn-dark">alert!</button>                                    <!--<button value="alert" id="alert-btn" class="btn btn-dark">alert!</button>-->
                               </div>
                         </div>
                   </form>
 
                   <table id="ads" class="table table-light">
                   </table>
-            </div>
+            </div><br><br><br><br>
       </body>
 </html>

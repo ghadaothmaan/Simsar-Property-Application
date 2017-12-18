@@ -18,8 +18,6 @@
 
             <script>
                 $(document).ready(function () {
-                    // TO DO - WHEN CLOSE IS CLICKED - REMOVE AD SERVLET THEN REMOVE FROM DIV OR WHATEVER
-                    // TO DO - WHEN SUSPEND IS CLICKED - SUSPEND AD AND ICON CHANGES
                     $(document).on('click', '#remove-btn', function () {
                         var id = $(this).val();
                         $.get("removeAd", "adID=" + id, function () {
@@ -106,6 +104,8 @@
                                   if (admin == 1) {
                               %>
                               <li class="nav-item active"><a href="manageAds.jsp" class="nav-link">Manage Ads</a><li>
+                              <li class="nav-item"><a href="manageUsers.jsp" class="nav-link">Manage Users</a><li>
+
                                     <%
                                         }
                                     %>

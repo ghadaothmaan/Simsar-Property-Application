@@ -34,7 +34,7 @@
               $.post("getProfile", param, function (data) {
                   console.log(data);
                   $("#theProfile").text("Hello, " + data["name"]);
-                  $("#headTitle").prepend("<img src='getUserPhoto?"+param+"' height='150' width='150' class='img-circle'/><br>");
+                  $("#headTitle").prepend("<img src='getUserPhoto?" + param + "' height='150' width='150' class='img-circle'/><br>");
                   $("#profile").append("<tr><th>Username: </th><td>" + data["username"] + "</td></tr>");
                   $("#profile").append("<tr><th>Email: </th><td>" + data["email"] + "</td></tr>");
                   $("#profile").append("<tr><th>Address: </th><td>" + data["address"] + "</td></tr>");
@@ -85,6 +85,8 @@
                                   if (admin == 1) {
                               %>
                               <li class="nav-item"><a href="manageAds.jsp" class="nav-link">Manage Ads</a><li>
+                              <li class="nav-item"><a href="manageUsers.jsp" class="nav-link">Manage Users</a><li>
+
                                     <%
                                         }
                                     %>
@@ -123,29 +125,30 @@
 
             <div class="container">
                   <br><br>
-                  <div class="row" id="head">
-                        <div class="col" id="headTitle">
 
-                        </div>
-                        <div class="col" id="headEdit">
-
-                        </div>
-                  </div>
                   <div class="row">
                         <div class="col" class="firstCol">
                               <h1 id="theProfile">Hello,</h1>
+                              <div class="row" id="head">
+                                    <div class="col" id="headTitle">
+
+                                    </div>
+                                    <div class="col" id="headEdit">
+
+                                    </div>
+                              </div>
+                              <br>
                               <table class="table table-light" id="profile">
 
                               </table>
                         </div>
                   </div>
-                  <br><br>
 
                   <form action="editProfile.jsp">
-                        <button type="submit" name="submit" class="btn btn-dark" /> edit profile </button>
+                        <button type="submit" name="submit" class="btn btn-dark" /> edit profile </button> 
                   </form>
-
             </div>
+            <br><br><br><br>
       </body>
 
 </html>
